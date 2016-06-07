@@ -27,17 +27,25 @@ public class Robot {
 		String packet = PREFIX + DYNAMIXEL_ID + COMMAND_PACKET_LENGTH + INSTRUCTION_WRITE + ADDRESS_EXECUTE + hex;
 		packet = packet + AddCRC.addCrc(packet);
 		char[] bytes = packet.toCharArray();
-		System.out.println(bytes);
+		long start = System.currentTimeMillis();
+		
+//		System.out.println(bytes);
 		for (int i = 0; i < bytes.length; i += 2) {
 			String bite = "";
 			bite += bytes[i];
 			bite += bytes[i + 1];
 			int thisByte = Integer.parseInt(bite, 16);
-			System.out.println(thisByte);
+//			System.out.println(thisByte);
 			connection.sendData(thisByte);
 		}
+		long end1 = System.currentTimeMillis();
+
 		connection.flush();
 
+		long end2 = System.currentTimeMillis();
+		
+		System.out.printf("Time 1: %.2f\n", (end1-start)/1000.0);
+		System.out.printf("Time 2: %.2f\n", (end2-end1)/1000.0);
 	}
 
 	private String prefix(String command) {

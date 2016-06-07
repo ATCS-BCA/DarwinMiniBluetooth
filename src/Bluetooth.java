@@ -1,3 +1,4 @@
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -16,7 +17,7 @@ public class Bluetooth implements SerialPortEventListener {
 
 	private SerialPort serialPort;
 	private static final int TIME_OUT = 1000; // Port open timeout
-	private static final int BAUD_RATE = 9600; // device serial port
+	private static final int BAUD_RATE = 115200; // device serial port
 	private String appName;
 	@SuppressWarnings("unused")
 	private BufferedReader input;
@@ -33,16 +34,20 @@ public class Bluetooth implements SerialPortEventListener {
 		Enumeration<?> portEnum = CommPortIdentifier.getPortIdentifiers();
 		// Enumerate system ports and try connecting to device over each
 
-		System.out.println("Connecting...");
+		System.out.println(System.currentTimeMillis() + ": Entering connection loop...");
 		while (portId == null && portEnum.hasMoreElements()) {
 			// Iterate through your host computer's serial port IDs
 			CommPortIdentifier currPortId = (CommPortIdentifier) portEnum.nextElement();
+
+			System.out.println(System.currentTimeMillis() + ": " + currPortId);
+			
 			if (currPortId.getName().equals(portID) || currPortId.getName().startsWith(portID)) {
 				// Try to connect to the device on this port
 				// Open serial port
+				System.out.println(System.currentTimeMillis() + ": Connecting to robot");
 				serialPort = (SerialPort) currPortId.open(appName, TIME_OUT);
 				portId = currPortId;
-				System.out.println("Connected on port" + currPortId.getName());
+				System.out.println(System.currentTimeMillis() + ": Connected on port" + currPortId.getName());
 				break;
 			}
 		}
@@ -62,6 +67,8 @@ public class Bluetooth implements SerialPortEventListener {
 		// Give the device some time
 		Thread.sleep(2000);
 		input = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
+		output = new BufferedOutputStream(serialPort.getOutputStream());
+
 		return true;
 	}
 
@@ -79,7 +86,6 @@ public class Bluetooth implements SerialPortEventListener {
 	}
 
 	public void sendData(int data) throws IOException {
-		output = serialPort.getOutputStream();
 		output.write(data);
 	}
 

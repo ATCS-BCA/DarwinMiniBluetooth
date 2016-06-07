@@ -9,15 +9,15 @@ public class Runner {
 	public static void main(String[] main) {
 		Robot r1, r2;
 		try {
-			r1 = new Robot("Andy2", "COM3");
+			r1 = new Robot("Steve", "COM15");
 			System.out.println(r1);
-//			r2 = new Robot("Sophia", "COM9"); 
+			r2 = new Robot("Sophia", "COM11"); 
 			Scanner input = new Scanner(System.in);
 			do {
 				String command = input.nextLine(); 
 				System.out.println(command);
 				r1.sendCommand(command);
-//				r2.sendCommand(command);
+				r2.sendCommand(command);
 			} while (true);
 		} catch (PortInUseException e) {
 			// TODO Auto-generated catch block
